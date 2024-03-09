@@ -26,26 +26,49 @@ export const Form = () => {
     console.log(data)
   })
 
+  const name_validation = {
+    name: "name",
+    label: "name",
+    type: "text",
+    id: "name",
+    placeholder: "write your name...",
+    validation: {
+      required: {
+        value: true,
+        message:"30 characters maximum",
+      },
+    } 
+  }
+
+  const password_validation = {
+    name: "password",
+    label: "password",
+    type: "password",
+    id: "password",
+    placeholder: "type password...",
+    validation: {
+      required: {
+        value: true,
+        message: "required",
+      },
+      minLength: {
+        value: 6,
+        message: "min 6 characters",
+      },
+    },
+  }
+
   return (
     <FormProvider {...methods}>
         <form
           onSubmit = { e => e.preventDefault()}
           noValidate
+          autoComplete = "off"
           className = "container"
         >
           <div className = "grid gap-5 md:grid-cols-2">
-            <Input
-              label = "name"
-              type = "text"
-              id = "name"
-              placeholder = "type your name..."
-            />  
-            <Input
-              label = "password"
-              type = "password"
-              id = "password"
-              placeholder = "type your password"
-            />
+            <Input { ...name_validation }/>  
+            <Input { ...password_validation }/>
           </div>
           <div className="mt-5">
             <button
