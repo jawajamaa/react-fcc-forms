@@ -12,7 +12,15 @@ import { useFormContext } from 'react-hook-form'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MdError } from 'react-icons/md'
 
-export const Input = ({ label, type, id, placeholder }) => {
+export const Input = ({ 
+  name,
+  label, 
+  type, 
+  id, 
+  placeholder,
+  validation,
+  multiline,
+  className, }) => {
   const { 
     register,
     formState: { errors },
@@ -21,8 +29,11 @@ export const Input = ({ label, type, id, placeholder }) => {
   const inputError = findInputError(errors, label);
   const isInvalid = isFormInvalid(inputError);
 
+  const input_tailwind =
+   "p-5 font-medium roumded-md w-full border border-slate-300 placeholder:opacity-60"
+
   return (
-    <div className= "flex flex-col w-full gap-2">
+    <div className= {cn("flex flex-col w-full gap-2", className)}>
       <div className = "flex justify-between">
         <label htmlFor = {id} className = "font-semibold capitalize">
           {label}
@@ -36,39 +47,23 @@ export const Input = ({ label, type, id, placeholder }) => {
           )}
         </AnimatePresence>
       </div>
-      <input
-        id = { id }
-        type = { type }
-        className = "w-full p-5 font-medium border rounded-md border-slate-300 placeholder:opacity-60"
-        placeholder = { placeholder }
-        {...register(label, {
-          required: {
-            value: true,
-            message: "required",
-          },
-        })}
+      {multiline ? (
+        <textarea
+          id = { id }
+          type = { type }
+          className = "w-full p-5 font-medium border rounded-md border-slate-300 placeholder:opacity-60"
+          placeholder = { placeholder }
+          {...register(`${name}`, validation)}
+          ></textarea>
+      ) : (
+        <input
+          id = {id}
+          type = {type}
+          className = {cn(input_tailwind)}
+          placeholder = { placeholder }
+          {...register(name, validation)}
         />
+      )}
     </div>
     )
   }
-
-const InputError = ({ message }) => {
-  return (
-  <motion.p
-    className = "flex items-center gap-1 px-2 font-semibold text-red-500 bg-red-100 rounded-md"
-    { ...framer_error }
-  >
-    <MdError />
-      { message }
-    </motion.p>
-
-  )
-
-}
-
-const framer_error = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: 10 },
-  transition: { duration: 0.2 },
-}
